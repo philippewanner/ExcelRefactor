@@ -1,7 +1,8 @@
-package io.hotkey.excelrefactor.gui;
+package io.hotkey.excelrefactor.view;
 
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.JavaView;
+import io.hotkey.excelrefactor.viewmodel.MainViewModel;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,14 +19,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-/**
- * Created by philippewanner on 08.04.17.
- */
 public class MainView extends VBox implements JavaView<MainViewModel>, Initializable {
 
     // Action pane
@@ -93,11 +92,11 @@ public class MainView extends VBox implements JavaView<MainViewModel>, Initializ
 
     private void actionPaneConfigureEvents() {
         // Drag over the surface
-        dropPane.setOnDragOver(event -> mouseDragOver(event));
+        dropPane.setOnDragOver(this::mouseDragOver);
         // Dropping over surface
-        dropPane.setOnDragDropped(event -> mouseDragDropped(event));
+        dropPane.setOnDragDropped(this::mouseDragDropped);
         // Drag exited the surface
-        dropPane.setOnDragExited(event -> mouseDragExited(event));
+        dropPane.setOnDragExited(this::mouseDragExited);
     }
 
     private void actionPaneConfigureStyle() {
@@ -189,7 +188,7 @@ public class MainView extends VBox implements JavaView<MainViewModel>, Initializ
 
         Dragboard db = event.getDragboard();
         if (db.hasFiles() && isAcceptedExtension(db)) {
-            List<String> filePaths = db.getFiles().stream().map(f -> f.getAbsolutePath()).collect(Collectors.toList());
+            List<String> filePaths = db.getFiles().stream().map(File::getAbsolutePath).collect(Collectors.toList());
             System.out.println(filePaths);
             event.setDropCompleted(true);
         } else {
