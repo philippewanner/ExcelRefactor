@@ -1,7 +1,9 @@
 package io.hotkey.excelrefactor;
 
+import io.hotkey.excelrefactor.gui.GuiBuilder;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -25,15 +27,15 @@ public class Main extends Application {
 
     private Pane initialiseGui(Stage stage) {
 
-        Pane rootPane = GuiBuilder.buildRootPane();
+        Pane rootPane = GuiBuilder.buildRootPane(stage);
 
-        Pane mainPane = GuiBuilder.buildMainPane();
+        Pane mainPane = GuiBuilder.buildMainPane(rootPane);
         rootPane.getChildren().add(mainPane);
 
-        Pane progressPane = GuiBuilder.buildProgressPane();
+        HBox progressPane = GuiBuilder.buildProgressPane(rootPane);
         rootPane.getChildren().add(progressPane);
 
-        Pane logPane = GuiBuilder.buildLogPane();
+        Pane logPane = GuiBuilder.buildLogPane(rootPane);
         rootPane.getChildren().add(logPane);
 
         return rootPane;

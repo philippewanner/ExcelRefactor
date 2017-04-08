@@ -1,4 +1,4 @@
-package io.hotkey.excelrefactor.gui;
+package io.hotkey.excelrefactor.gui.main;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * Created by philippewanner on 07.04.17.
  */
-public class MainPane extends HBox {
+public class MainView extends HBox {
 
     private HBox dropPane;
     private Text dropText;
@@ -37,7 +37,7 @@ public class MainPane extends HBox {
     private TextField sheetnameFilterTextField;
     private VBox buttonPane;
 
-    public MainPane() {
+    public MainView() {
         super();
         initialisePane();
     }
@@ -48,7 +48,6 @@ public class MainPane extends HBox {
 
     private void initialisePane() {
 
-        styleThePane();
         addDropPane();
         addArrowImage();
         addAction();
@@ -56,19 +55,6 @@ public class MainPane extends HBox {
         addFilterPane();
         addArrowImage();
         addButtonPane();
-    }
-
-    private void styleThePane() {
-        setStyle("-fx-background-color: #777777;");
-        setPadding(new Insets(8));
-        setSpacing(8);
-        minWidth(1000);
-        prefWidth(1000);
-        maxWidth(1000);
-        minHeight(200);
-        prefHeight(200);
-        maxHeight(Double.MAX_VALUE);
-        setAlignment(Pos.CENTER);
     }
 
     private void addArrowImage() {
