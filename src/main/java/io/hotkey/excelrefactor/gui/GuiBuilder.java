@@ -1,12 +1,10 @@
 package io.hotkey.excelrefactor.gui;
 
 
-import io.hotkey.excelrefactor.gui.log.LogView;
 import io.hotkey.excelrefactor.gui.main.MainView;
 import io.hotkey.excelrefactor.gui.progress.ProgressView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -51,7 +49,7 @@ public class GuiBuilder {
 
     public static HBox buildLogPane(Pane rootPane) {
 
-        LogView logView = new LogView();
+        HBox logView = new HBox();
         logView.prefWidthProperty().bind(rootPane.widthProperty());
         logView.setAlignment(Pos.CENTER);
         return logView;
