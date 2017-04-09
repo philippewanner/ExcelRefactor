@@ -3,10 +3,14 @@ package io.hotkey.excelrefactor.view;
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.JavaView;
 import io.hotkey.excelrefactor.viewmodel.MainViewModel;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
@@ -21,6 +25,7 @@ import javafx.scene.text.Text;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -34,9 +39,9 @@ public class MainView extends VBox implements JavaView<MainViewModel>, Initializ
     private final Text dropText = new Text("Drop here");
     // Action pane - SearchReplace
     private final VBox searchReplacePane = new VBox();
-    private final Text searchText = new Text("looking for...");
+    private final Text searchText = new Text("Search");
     private final TextField searchTextField = new TextField();
-    private final Text replaceText = new Text("Replace by...");
+    private final Text replaceText = new Text("Replace with");
     private final TextField replaceTextField = new TextField();
     // Action pane - Filter
     private final VBox filterPane = new VBox();
@@ -53,10 +58,13 @@ public class MainView extends VBox implements JavaView<MainViewModel>, Initializ
     @InjectViewModel
     private MainViewModel viewModel;
 
+    private List<File> droppedFiles = new ArrayList<>();
+
     public MainView() {
 
         actionPaneGatherNodes();
         actionPaneConfigureEvents();
+        actionPaneAddListener();
         actionPaneConfigureStyle();
 
         progressAndLogConfigureStyle();
@@ -69,6 +77,9 @@ public class MainView extends VBox implements JavaView<MainViewModel>, Initializ
     public void initialize(URL url, ResourceBundle resourceBundle) {
         logArea.textProperty().bind(viewModel.logText());
         progressBar.progressProperty().bind(viewModel.progress());
+        searchTextField.textProperty().bindBidirectional(viewModel.searchText());
+        replaceTextField.textProperty().bindBidirectional(viewModel.replaceText());
+        sheetnameFilterTextField.textProperty().bindBidirectional(viewModel.sheetnameFilter());
     }
 
     private void progressAndLogConfigureStyle() {
@@ -97,6 +108,23 @@ public class MainView extends VBox implements JavaView<MainViewModel>, Initializ
         dropPane.setOnDragDropped(this::mouseDragDropped);
         // Drag exited the surface
         dropPane.setOnDragExited(this::mouseDragExited);
+        // Click on start button
+        startButton.setOnAction(this::startButonClicked);
+    }
+
+    private void actionPaneAddListener(){
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            viewModel.searchText().set(newValue);
+            viewModel.addLogText("Search field changed from "+oldValue + " to " + newValue);
+        });
+        replaceTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            viewModel.replaceText().set(newValue);
+            viewModel.addLogText("Replace field changed from "+oldValue + " to " + newValue);
+        });
+        sheetnameFilterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            viewModel.sheetnameFilter().set(newValue);
+            viewModel.addLogText("Sheet name filter field changed from "+oldValue + " to " + newValue);
+        });
     }
 
     private void actionPaneConfigureStyle() {
@@ -184,12 +212,19 @@ public class MainView extends VBox implements JavaView<MainViewModel>, Initializ
         event.consume();
     }
 
+    private void startButonClicked(ActionEvent actionEvent){
+
+        viewModel.addLogText("Start button clicked");
+
+    }
+
     private void mouseDragDropped(final DragEvent event) {
 
         Dragboard db = event.getDragboard();
         if (db.hasFiles() && isAcceptedExtension(db)) {
             List<String> filePaths = db.getFiles().stream().map(File::getAbsolutePath).collect(Collectors.toList());
-            System.out.println(filePaths);
+            droppedFiles = filePaths.stream().map(path -> new File(path)).collect(Collectors.toList());
+            viewModel.addLogText(droppedFiles.toString());
             event.setDropCompleted(true);
         } else {
             event.setDropCompleted(false);
