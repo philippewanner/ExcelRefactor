@@ -2,6 +2,7 @@ package io.hotkey.excelrefactor.view;
 
 import de.saxsys.mvvmfx.InjectViewModel;
 import de.saxsys.mvvmfx.JavaView;
+import io.hotkey.excelrefactor.model.ExcelRefactor;
 import io.hotkey.excelrefactor.viewmodel.MainViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -25,9 +26,7 @@ import javafx.scene.text.Text;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MainView extends VBox implements JavaView<MainViewModel>, Initializable {
@@ -215,6 +214,10 @@ public class MainView extends VBox implements JavaView<MainViewModel>, Initializ
     private void startButonClicked(ActionEvent actionEvent){
 
         viewModel.addLogText("Start button clicked");
+        ExcelRefactor refactor = new ExcelRefactor(droppedFiles, Arrays.asList(sheetnameFilterTextField.getText()));
+        Map<String, String> searchReplaceElements = new HashMap<>();
+        searchReplaceElements.put(searchTextField.getText(), replaceTextField.getText());
+        refactor.renameStringCellContent(searchReplaceElements);
 
     }
 
