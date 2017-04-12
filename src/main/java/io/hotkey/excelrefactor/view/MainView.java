@@ -114,15 +114,12 @@ public class MainView extends VBox implements JavaView<MainViewModel>, Initializ
     private void actionPaneAddListener(){
         searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             viewModel.searchText().set(newValue);
-            viewModel.addLogText("Search field changed from "+oldValue + " to " + newValue);
         });
         replaceTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             viewModel.replaceText().set(newValue);
-            viewModel.addLogText("Replace field changed from "+oldValue + " to " + newValue);
         });
         sheetnameFilterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             viewModel.sheetnameFilter().set(newValue);
-            viewModel.addLogText("Sheet name filter field changed from "+oldValue + " to " + newValue);
         });
     }
 
@@ -213,12 +210,12 @@ public class MainView extends VBox implements JavaView<MainViewModel>, Initializ
 
     private void startButonClicked(ActionEvent actionEvent){
 
-        viewModel.addLogText("Start button clicked");
+        viewModel.addLogText(" -> Start replacing the cell \""+searchTextField.getText()+"\" with \"" + replaceTextField.getText() + "\" in all sheets named \""+ sheetnameFilterTextField.getText() +"\"");
         ExcelRefactor refactor = new ExcelRefactor(droppedFiles, Arrays.asList(sheetnameFilterTextField.getText()));
         Map<String, String> searchReplaceElements = new HashMap<>();
         searchReplaceElements.put(searchTextField.getText(), replaceTextField.getText());
         refactor.renameStringCellContent(searchReplaceElements);
-
+        viewModel.addLogText(" -> Finished");
     }
 
     private void mouseDragDropped(final DragEvent event) {
